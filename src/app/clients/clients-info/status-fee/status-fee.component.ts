@@ -32,7 +32,7 @@ export class StatusFeeComponent implements OnInit,OnChanges {
   getData() {
     console.log(this.clientName+"getDataaaaa IN STATIC FEE")
     this.httpClient.get('http://127.0.0.1:5000/getStaticFee',{params:{data:this.clientName}}).subscribe(data => {
-      console.log(data[0]);
+      console.log(data[0]+"static feeeeeee");
       this.dataObj = data[0];
       console.log(this.dataObj.static_fees.admin+"status fee");
       

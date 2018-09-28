@@ -11,15 +11,12 @@ import { routing } from './app-routing.module';
 import { AuthServices } from './core/auth/auth-service';
 import { AuthGuardService } from './core/auth/Auth-guard-service ';
 import { HttpClientModule } from '@angular/common/http';
-import { MatDialogModule} from '@angular/material/dialog';
-import { CatTierFeesComponent } from './clients/clients-info/cat-tier-fees/cat-tier-fees.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
-    LoginComponent,
-    
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -29,15 +26,9 @@ import { CatTierFeesComponent } from './clients/clients-info/cat-tier-fees/cat-t
     routing,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
-    MatDialogModule
-   
-
+    HttpClientModule
   ],
-
   providers: [AuthServices, AuthGuardService],
   bootstrap: [AppComponent]
-
-
 })
 export class AppModule { }

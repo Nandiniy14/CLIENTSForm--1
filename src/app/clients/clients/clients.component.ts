@@ -77,6 +77,7 @@ export class ClientsComponent implements OnInit {
     
   }
   getData() {
+    console.log("jdghhg")
     this.httpClient.get('http://127.0.0.1:5000/getClients').subscribe(data => {
       console.log(data);
       this.dataObj = data;

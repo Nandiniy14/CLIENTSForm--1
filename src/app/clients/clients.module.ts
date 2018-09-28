@@ -14,7 +14,9 @@ import { AddTierComponent } from './clients-info/add-tier/add-tier.component';
 import { DetailsComponent } from './clients-info/details/details.component';
 import { StatusFeeComponent } from './clients-info/status-fee/status-fee.component';
 import { CatTierFeesComponent, DialogOverviewExampleDialog } from './clients-info/cat-tier-fees/cat-tier-fees.component';
-import { MatDialogModule } from '@angular/material/dialog';
+
+
+
 
 
 @NgModule({
@@ -23,16 +25,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     ClientsRoutingModule,
     AngularMaterialModule,
     FormsModule,
-    ReactiveFormsModule,
-    MatDialogModule
-
+    ReactiveFormsModule
   ],
-  // entryComponents: [CatTierFeesComponent],
   entryComponents: [CatTierFeesComponent,DialogOverviewExampleDialog],
-
   declarations: [ClientsComponent, ClientsNewComponent, ClientsInfoComponent,TiersComponent,
-    AddCatTierComponent,AddTierComponent,DetailsComponent, StatusFeeComponent, CatTierFeesComponent,DialogOverviewExampleDialog]
-
-  
+    AddCatTierComponent,AddTierComponent,DetailsComponent, StatusFeeComponent,CatTierFeesComponent,DialogOverviewExampleDialog]
 })
 export class ClientsModule { }

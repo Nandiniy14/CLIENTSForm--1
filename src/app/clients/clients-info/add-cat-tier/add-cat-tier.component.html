@@ -6,7 +6,7 @@
               <div class="fieldBlock" >
                   <div class="title">Lower Limit</div>
                   
-                  <input  type="text" class="form-control" formControlName="min" id="min"  />
+                  <input  type="text" class="form-control" formControlName="min" [(ngModel)]="value1" id="min" disabled />
               </div>
                   
               <div class="fieldBlock">
@@ -25,9 +25,8 @@
           </div> 
         </div>
         <div>
-            <button mat-icon-button color="primary" class="addIcon" (click)="addTier()"   style="cursor: default" type="button" style="font-size:25px"> <i class="fa fa-plus"> </i> </button>
-            <button mat-raised-button color="primary"  type="submit">Save</button>
-        
+            <!-- <button mat-icon-button color="primary" class="sample" (click)="addTier()" style="cursor: default" type="button" style="font-size:25px"> <i class="fa fa-plus"> </i> </button> -->
+            <button mat-raised-button color="primary"  type="submit">Add</button>
           </div> 
   
   

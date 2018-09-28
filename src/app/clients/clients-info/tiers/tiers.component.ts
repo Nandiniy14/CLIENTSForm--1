@@ -1,17 +1,10 @@
-import { Component, OnInit, Input, SimpleChanges, OnChanges, ViewChild } from '@angular/core';
+import { Component, OnInit, Input, SimpleChanges, OnChanges, ViewChild, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { FormGroup, FormArray, FormBuilder, NgForm, FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AddCatTier } from '../tiers.model';
 import { AddTier } from '../addtier.model';
 import { HttpParams } from '@angular/common/http';
-import { ClientsInfoService } from '../clients-info.service';
-import {MatDialog,MatDialogConfig} from "@angular/material";
-
-
-export interface CatTier {
-  name: string;
-}
 
 @Component({
   selector: 'app-tiers',
@@ -19,30 +12,27 @@ export interface CatTier {
   styleUrls: ['./tiers.component.css']
 })
 export class TiersComponent implements OnInit,OnChanges {
-
+  @Output() selectedCatTier: string = '';
   public myForm: FormGroup;
-  selectedCatTier: string = '';
   dataObj : any;
   catTierData : any;
-  catTierFees : any;
-  catTierFeesNames : any;
   catTierObj : AddCatTier;
   tierDataObj : AddTier;
   tierData : any;
+  catTierFees : any;
   submitted = false;
-  @ViewChild('catTierForm') catTierForm: NgForm;
-
-  @Input('clientName') clientName: string;
+  min: FormControl;
+  max: FormControl;
+  sku: FormControl;
+  catFeesNames:string[];
+  catTierFeesNames : any;
   catTierControl = new FormControl('', [Validators.required]);
-  catTiers: CatTier[] = [
-    {name: 'cat_01_tier_fees'},
-    {name: 'cat_02_tier_fees'},
-    
-  ];
-  constructor(private _fb: FormBuilder,private httpClient : HttpClient, private router: Router, private dialog: MatDialog) { 
+  @Input('clientName') clientName: string;
+  @ViewChild('updateForm') updateForm: NgForm;
+  @ViewChild('updateCatForm') updateCatForm: NgForm;
+  constructor(private _fb: FormBuilder, private httpClient: HttpClient, private router: Router) { 
     this.catTierObj = new AddCatTier;
     // this.tierDataObj = new AddCatTier;
-    this.getCatTierFees();
     
     
   }
@@ -50,8 +40,9 @@ export class TiersComponent implements OnInit,OnChanges {
   ngOnInit() {
     console.log(this.clientName+"in tiers client name");
     // this.getData();
+    // this.selectedCatTier ="cat_01_tier_fees";
       this.myForm = this._fb.group({
-          add: this._fb.array([
+          tiers: this._fb.array([
               this.initlanguage(),
           ])
       });
@@ -59,9 +50,8 @@ export class TiersComponent implements OnInit,OnChanges {
   ngOnChanges(changes: SimpleChanges) {
     this.clientName = changes['clientName'].currentValue;
     console.log(this.clientName + "in tiers")
-    this.getCatTierData();
+    this.getCatTierNames();
     this.getTierData();
-    this.getCatTierFees();
     this.selectCatTier(event);
   }
 
@@ -72,51 +62,62 @@ export class TiersComponent implements OnInit,OnChanges {
           sku: ['']
       });
   }
-  
+ 
+  addTier() {
+    const control = <FormArray>this.myForm.controls['tiers'];
+    control.push(this.initlanguage());
+  }
   selectCatTier(catTier) {
-    this.selectedCatTier = catTier.name;
-    console.log(this.selectedCatTier+"selectedCatTier");
+    this.selectedCatTier = catTier;
+    console.log(this.selectedCatTier+"selectedCatTier5678");
   }
   
-  
-
-   getCatTierData() {
+  getCatTierNames() {
     this.httpClient.get('http://127.0.0.1:5000/getCatTier',{params:{data:this.clientName}}).subscribe(data => {
-      console.log(data);
-      this.catTierData = data[0];
+      console.log(data[0].cat_tier_fees);
+      this.catTierFeesNames=Object.keys(data[0].cat_tier_fees);
+      this.catTierData = data[0].cat_tier_fees;
+      for(var i in this.catTierData) {
+           console.log(i+"cat tier names data");
+      }
       console.log(this.catTierData+"CATTIERFEES");
       
     });
-  }
+}
  
   getTierData() {
     this.httpClient.get('http://127.0.0.1:5000/getTier',{params:{data:this.clientName}}).subscribe(data => {
-      console.log(data+"tier data");
+      console.log(data);
       this.tierData = data[0]['tiers'];
-      console.log(this.tierData+"tier data model");
+      console.log(this.tierData);
       
       
     });
-    // this.clientInfo.getTier(this.clientName);
   }
-  
-
-  getCatTierFees(){
-    this.httpClient.get('http://127.0.0.1:5000/getCatTierFees',{params:{data:this.clientName}}).subscribe(data => {
-      console.log(data+"catTier Fees nAMES");
-      this.catTierFeesNames = data[0]['cat_fees'];
-      console.log(this.catTierFeesNames+"cattier fees dnaMES");
-      
-      
-    });
-
+  onUpdate(){
+    console.log(this.updateForm)
+    console.log('Form Submitted! in tier update', this.updateForm.value);
+    
+    this.httpClient.post('http://127.0.0.1:5000/tierUpdate',this.updateForm.value,{params:{data:this.clientName}}).subscribe(tierdata => {
+          console.log(tierdata + "4444");
+          
+          console.log("hello");
+        })
+  }
+  onUpdatecatTier(){
+    console.log(this.updateCatForm)
+    console.log('Form Submitted! in cat tier update', this.updateCatForm.value);
+    
+    this.httpClient.post('http://127.0.0.1:5000/catTierUpdate',this.updateCatForm.value,{params:{data:this.clientName,data1:this.selectedCatTier}}).subscribe(tierdata => {
+          console.log(tierdata + "4444");
+          
+          console.log("hello");
+        })
   }
   onCat() {
     this.submitted = true;
     
-  } 
-
-  //Method to display data of particular Cat Tier Fees, which is selected in the dropdown menu
+  }
   getCatTier(){
     console.log(this.selectedCatTier+"cattierForm Value");
     this.httpClient.get('http://127.0.0.1:5000/getCatTierData',{params:{data:this.clientName,data1:this.selectedCatTier}}).subscribe(data => {
@@ -127,7 +128,7 @@ export class TiersComponent implements OnInit,OnChanges {
       
       
     });
-  }
+}
 
 
 
